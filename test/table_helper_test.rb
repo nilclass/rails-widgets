@@ -152,6 +152,7 @@ class TableHelperTest < Test::Unit::TestCase
       :generate_css => true,
       :header => 'TiTlE',
       :html => {:id => 'number', :class => 'demo'},
+      :add_header_column => true,
       :cols => 4 do |i|
       output_buffer.concat i.to_s
     end
@@ -170,13 +171,13 @@ class TableHelperTest < Test::Unit::TestCase
           assert_select 'td:nth-child(4)', '3'
         end
         assert_select 'tr:last-of-type td', :count => 4 do
-          assert_select 'td:first-of-type', '4'
-          assert_select 'td:nth-of-type(2)', '5'
-          assert_select 'td.blank:nth-of-type(3)', '&nbsp;'
+          assert_select 'td.blank:first-of-type', '&nbsp;'
+          assert_select 'td:nth-of-type(2)', '4'
+          assert_select 'td:nth-of-type(3)', '5'
           assert_select 'td.blank:last-of-type', '&nbsp;'
         end
       end
     end
   end  
-  
+
 end
