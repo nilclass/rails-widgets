@@ -2,7 +2,7 @@ module Widgets
   module ShowhideHelper
     include CssTemplate
 
-    def show_box_for record, opts={}
+    def show_box_for(record, opts={})
       name = opts[:name] || 'details'
       link_name = opts[:link_name] || 'show details'
       detail_box_id = opts[:detail_box_id] || dom_detail_id(record,name)
@@ -17,7 +17,7 @@ module Widgets
       end
     end
 
-    def hide_box_for record, opts={}
+    def hide_box_for(record, opts={})
       name = opts[:name] || 'details'
       link_name = opts[:link_name] || 'hide details'
       detail_box_id = opts[:detail_box_id] || dom_detail_id(record,name)
@@ -33,7 +33,7 @@ module Widgets
       end
     end
 
-    def detail_box_for record, opts={}, &block
+    def detail_box_for(record, opts={}, &block)
       raise ArgumentError, 'Missing block in showhide.detail_box_for call' unless block_given?
       name = opts[:name] || 'details'
       @generate_css = opts[:generate_css] || false
@@ -43,27 +43,30 @@ module Widgets
       html[:class] ||= "#{name}_for_#{normalize_class_name(record)}"
       html[:style] = 'display:none;'
       @css_class = html[:class]
-      concat(render_css('showhide'), block.binding) if generate_css?
+      concat render_css('showhide') if generate_css?
+      # content_tag_for creates an HTML element with id and class parameters
+      # that relate to the specified Active Record object.
+      #
       # Taken from ActionView::Helpers::RecordTagHelper
-      concat content_tag(:div, capture(&block), html), block.binding
+      concat content_tag(:div, capture(&block), html)
       nil
     end
 
     private
 
-    def dom_detail_id record, name
+    def dom_detail_id(record, name)
       normalize_dom_id(record, name.to_s)
     end
 
-    def dom_show_id record, name
+    def dom_show_id(record, name)
       normalize_dom_id(record, "show_#{name}")
     end
 
-    def dom_hide_id record, name
+    def dom_hide_id(record, name)
       normalize_dom_id(record, "hide_#{name}")
     end
 
-    def normalize_dom_id object, prefix
+    def normalize_dom_id(object, prefix)
       if object.kind_of?(ActiveRecord::Base)
         dom_id(object, "#{prefix}_for#{object.id ? '' : '_new'}")
       else
@@ -71,7 +74,7 @@ module Widgets
       end
     end
 
-    def normalize_class_name object
+    def normalize_class_name(object)
       if object.kind_of?(ActiveRecord::Base)
         ActionController::RecordIdentifier.singular_class_name(object)
       else
@@ -79,12 +82,5 @@ module Widgets
       end
     end
 
-    # content_tag_for creates an HTML element with id and class parameters
-    # that relate to the specified Active Record object.
-    #
-    # Taken from ActionView::Helpers::RecordTagHelper
-    def content_box_for(tag_name, *args, &block)
-      concat content_tag(tag_name, capture(&block), args), block.binding
-    end
   end
 end

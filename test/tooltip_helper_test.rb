@@ -1,15 +1,17 @@
 require File.dirname(__FILE__) + '/test_helper'
 
 class TooltipHelperTest < Test::Unit::TestCase
-  attr_accessor :params
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::CaptureHelper
   include Widgets::TooltipHelper
+  attr_accessor :params
+  attr_accessor :output_buffer
   
   def setup
-    @params = {}
+    self.params = {}
+    self.output_buffer= ''
   end
     
   def test_presence_of_instance_methods

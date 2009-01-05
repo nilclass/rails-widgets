@@ -2,21 +2,22 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class SpiffyCornersHelperTest < Test::Unit::TestCase
-  attr_accessor :params
   include ActionView::Helpers::TagHelper
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::CaptureHelper
   include Widgets::SpiffyCorners::SpiffyCornersHelper
-  
+  attr_accessor :params
+  attr_accessor :output_buffer
+
   def setup
-    @params = {}
+    self.params = {}
+    self.output_buffer= ''
   end
     
   def test_simple_with_css
     expected = load_template('spiffy_corners/simple.html') 
-    
-    _erbout = ''
-    spiffy_corners(:generate_css => true) do concat("Ciccio", binding); end
-    assert_equal expected, _erbout
+
+    spiffy_corners(:generate_css => true) do concat("Ciccio"); end
+    assert_equal expected, self.output_buffer
   end
 end
