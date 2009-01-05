@@ -180,4 +180,33 @@ class TableHelperTest < Test::Unit::TestCase
     end
   end  
 
+  def test_full_rows_layout_with_header_column
+    tableize %w{1 2 3 4 5 6 7},
+      :cols => 3,
+      :name => :full_row_layout,
+      :add_header_column => true do |i|
+      output_buffer.concat i.to_s
+    end
+    root = HTML::Document.new(output_buffer).root
+    assert_select root, 'table.full_row_layout_table:root', :count => 1 do
+      assert_select 'tbody:only-of-type' do
+        assert_select 'tr', :count => 3
+        assert_select 'tr:first-of-type td', :count => 3 do
+          assert_select 'td:first-of-type', '1'
+          assert_select 'td:nth-of-type(2)', '2'
+          assert_select 'td:last-of-type', '3'
+        end
+        assert_select 'tr:nth-of-type(2) td', :count => 3 do
+          assert_select 'td.blank:first-of-type', '&nbsp;'
+          assert_select 'td:nth-of-type(2)', '4'
+          assert_select 'td:last-of-type', '5'
+        end
+        assert_select 'tr:last-of-type td', :count => 3 do
+          assert_select 'td.blank:first-of-type', '&nbsp;'
+          assert_select 'td:nth-of-type(2)', '6'
+          assert_select 'td:last-of-type', '7'
+        end
+      end
+    end
+  end
 end

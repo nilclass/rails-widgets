@@ -55,7 +55,7 @@ module Widgets
       collection.each do |item|
         index += 1
         _out << content_tag('td', capture(item, &block))
-        should_wrap =  index.remainder(columns) == 0 and index != size
+        should_wrap =  index.remainder(columns) == 0 && index != size
         _out << '</tr>' << tag('tr', nil, true) if should_wrap
         
         # prepend every line with an empty cell
