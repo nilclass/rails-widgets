@@ -40,5 +40,11 @@ module Widgets
     def link?
       @link && !@link.empty?
     end
+    
+    def highlights_on(h)
+      h = [h] if h.kind_of? Hash
+      self.highlights = h
+    end
+    
   end
 end
