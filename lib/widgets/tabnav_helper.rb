@@ -23,7 +23,7 @@ module Widgets
         html << tag('div', options, true)
         html << capture(&block)
         html << '</div>'
-        concat  html
+        concat html
         nil # avoid duplication if called with <%= %>
       else
         return html

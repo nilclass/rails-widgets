@@ -49,7 +49,6 @@ module Widgets
       end
       concat '</ul>'
     end
-
   end
 end
 
