@@ -16,6 +16,13 @@ require 'widgets/tabnav'
 require 'widgets/tabnav_helper'
 ActionController::Base.helper Widgets::TabnavHelper
 
+##### YUI Tabnav #####
+require 'widgets/tab'
+require 'widgets/yui_tabnav'
+require 'widgets/yui_tabnav_helper'
+ActionController::Base.helper Widgets::YuiTabnavHelper
+
+
 ##### Table #####
 require 'widgets/table_helper'
 ActionController::Base.helper Widgets::TableHelper
