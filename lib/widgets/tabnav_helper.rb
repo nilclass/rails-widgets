@@ -16,6 +16,7 @@ module Widgets
     # ===
     #   :partial: defaults to widgets/<name>_tabnav
     def tabnav name, opts={}, &block
+      self.instance_variable_set(:@tabnav_breadcrumbs,[]) if self.instance_variable_get(:@tabnav_breadcrumbs).nil?
       partial_template = opts[:partial] || "widgets/#{name}_tabnav"
       html = capture { render :partial => partial_template }
       if block_given?
@@ -28,6 +29,10 @@ module Widgets
       else
         return html
       end
+    end
+    
+    def tabnav_breadcrumbs
+      self.instance_variable_get(:@tabnav_breadcrumbs).join(' &raquo; ')
     end
 
     # tabnav building methods
@@ -51,7 +56,12 @@ module Widgets
 
     def add_tab options = {}, &block
       raise 'Cannot call add_tab outside of a render_tabnav block' unless @_tabnav
-      @_tabnav.tabs << Tab.new(options, &block)
+      tab = Tab.new(options, &block)
+      @_tabnav.tabs << tab
+      if tab.highlighted?(params)
+        self.instance_variable_set(:@tabnav_breadcrumbs, self.instance_variable_get(:@tabnav_breadcrumbs) + [link_to(tab.name,tab.link)]) 
+        self.instance_variable_set(:@tabnav_breadcrumbs, self.instance_variable_get(:@tabnav_breadcrumbs) + [link_to(tab.additional_breadcrumb_name,tab.additional_breadcrumb_link)]) unless tab.additional_breadcrumb_name.blank?
+      end
       nil
     end
 
