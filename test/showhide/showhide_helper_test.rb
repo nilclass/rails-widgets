@@ -20,7 +20,7 @@ class TestTemplate < ActionView::Template
   include ActionView::Helpers::CaptureHelper
   attr_accessor :output_buffer
   def initialize
-    super(File.dirname(__FILE__) + '/template.erb')
+    super(File.dirname(__FILE__), 'template.erb')
   end
 end
 

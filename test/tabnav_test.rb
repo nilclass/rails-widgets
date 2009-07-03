@@ -5,6 +5,7 @@ class TabnavTest < Test::Unit::TestCase
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::CaptureHelper
+  include ActionController::TestCase::Assertions
   include Widgets::TabnavHelper
   attr_accessor :params
   attr_accessor :output_buffer

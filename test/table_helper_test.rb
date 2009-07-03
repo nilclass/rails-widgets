@@ -5,6 +5,7 @@ class TableHelperTest < Test::Unit::TestCase
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::CaptureHelper
   include Widgets::TableHelper
+  include ActionController::TestCase::Assertions
   attr_accessor :output_buffer
   
   EXPECTED_INSTANCE_METHODS = %w{tableize}
