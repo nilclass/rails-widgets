@@ -2,7 +2,7 @@ module Widgets
   class Tab
     include Highlightable
     include Disableable
-    attr_accessor :link, :remote_link, :name, :html, :li_options, :extras
+    attr_accessor :link, :remote_link, :name, :html, :li_options, :extras, :additional_breadcrumb_name, :additional_breadcrumb_link
     
     def initialize(opts={})
       @name = opts[:name] 
@@ -38,6 +38,7 @@ module Widgets
     end
     def named(n); @name = n; end
     def titled(t); @html[:title] = t; end
+    def defines_additional_breadcrumb(name,link); @additional_breadcrumb_name = name;  @additional_breadcrumb_link = link; end
     
     def link?
       @link && !@link.empty?
