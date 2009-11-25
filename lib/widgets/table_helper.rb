@@ -12,6 +12,8 @@ module Widgets
     # +:cols+ number of columns (default 3)
     # +:html+ table html attributes (+:class+, +:id+)
     # +:name+ name of table (dafault +:main+)
+    # +:header+ header cell title
+    # +:add_header_column+ preserve column under header cell empty (dafault +false+)
     #
     #   <% tableize @users, :name => 'credential', :html => {:class => 'people'}, :cols => 2 do |user| -%>
     #     login: <%= user.name %>
@@ -33,7 +35,8 @@ module Widgets
       html = opts[:html] || {} # setup default html options
       html[:id] ||= @name.to_s.underscore << '_table'
       html[:class] ||= html[:id]
-      
+      add_header_column = opts[:add_header_column] || false
+
       _out = generate_css? ? render_css('table') : ''
       _out << tag('table', {:id => html[:id], :class => html[:class]}, true) 
       _out << tag('tbody', nil, true) 
@@ -52,22 +55,22 @@ module Widgets
       collection.each do |item|
         index += 1
         _out << content_tag('td', capture(item, &block))
-        should_wrap =  index.remainder(columns) == 0 and index != size
-        _out << '</tr>' << tag('tr', nil, true) if should_wrap 
+        should_wrap =  index.remainder(columns) == 0 && index != size
+        _out << '</tr>' << tag('tr', nil, true) if should_wrap
         
         # prepend every line with an empty cell
-        if should_wrap && opts[:skip_header_column] == true
+        if should_wrap && add_header_column
           _out << empty_cell 
           index += 1; size += 1
         end
       end
       # fill remaining columns with empty boxes
       remaining = size.remainder(columns)
-       (columns - remaining).times do
+      (columns - remaining).times do
         _out << empty_cell
       end unless remaining == 0
       _out << '</tr>' << '</tbody>' << '</table>' 
-      concat(_out, block.binding)
+      concat _out
       nil # avoid duplication if called with <%= %>
     end
     

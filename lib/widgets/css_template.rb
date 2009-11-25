@@ -16,7 +16,7 @@ module Widgets
     def rw_render_template(name, _binding = nil)
       _template_filename = "#{name}.html.erb" 
       _template = ERB.new IO.read(File.join(File.dirname(__FILE__), _template_filename))
-      _template.result(binding)
+      _template.result(_binding)
     end
 
     # should the helper generate a css for this widget?

@@ -21,6 +21,7 @@ end
 desc "Copies the widgets assets (images and javascripts) to the public folder"
 namespace :widgets do
   task :setup do
+    copy_image      'menu-bg.png'
     copy_image      'tooltip_arrow.gif'
     copy_image      'tooltip_image.gif'
     copy_javascript 'tooltip.js'

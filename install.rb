@@ -19,6 +19,7 @@ end
 
 # copy static assets
 begin 
+  copy_image 'menu-bg.png'
   copy_image 'tooltip_arrow.gif'
   copy_image 'tooltip_image.gif'
   copy_javascript 'tooltip.js'

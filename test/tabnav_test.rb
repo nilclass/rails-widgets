@@ -5,11 +5,14 @@ class TabnavTest < Test::Unit::TestCase
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::CaptureHelper
+  include ActionController::TestCase::Assertions
   include Widgets::TabnavHelper
   attr_accessor :params
+  attr_accessor :output_buffer
 
   def setup
-    @params = {}
+    self.params= {}
+    self.output_buffer= ''
   end
 
   def test_default_html_options
@@ -19,7 +22,6 @@ class TabnavTest < Test::Unit::TestCase
   end
 
   def test_multiple_css_class
-    _erbout = ''
     render_tabnav :main do
       add_tab :html=>{:class=>'home'} do |t|
         t.named 'active-tab'
@@ -38,7 +40,7 @@ class TabnavTest < Test::Unit::TestCase
       end
     end
 
-    root = HTML::Document.new(_erbout).root
+    root = HTML::Document.new(self.output_buffer).root
     assert_select root, 'div[class=main_tabnav][id=main_tabnav]:root', :count => 1 do
       assert_select 'ul:only-of-type li', :count => 4 do
         assert_select 'li[class=home active]:first-of-type' do
