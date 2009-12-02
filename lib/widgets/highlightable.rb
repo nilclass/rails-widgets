@@ -31,16 +31,17 @@ module Widgets
       # it does ignore some params like 'only_path' etc..
       # we have to do this in orderr to support restful routes
       def highlighted? options={}
+        request = options.delete(:request)
         option = clean_unwanted_keys(options)
         #puts "### '#{name}'.highlighted? #{options.inspect}"
         result = false
-       
+        
         highlights.each do |highlight| # for every highlight(proc or hash)
           highlighted = true
           if highlight.kind_of? String # highlight if string matches URI
-            highlighted &= (request.uri == highlight)
-          elsif highlight.kind_of?(Regex) # highlight if expression matches URI
-            highlighted &= (request.uri =~ highlight)
+            highlighted &= (request.try(:url) == highlight)
+          elsif highlight.kind_of?(Regexp) # highlight if expression matches URI
+            highlighted &= (request.try(:url) =~ highlight)
           elsif highlight.kind_of? Proc # evaluate the proc
             highlighted &= (highlight.call ? true : false)
           elsif highlight.kind_of? Hash # evaluate the hash
@@ -52,7 +53,7 @@ module Widgets
               highlighted &= h_key==options[key].to_s
             end
           else # highlighting rule not supported
-            raise 'highlighting rules should be String, Regex, Proc or Hash' 
+            raise 'highlighting rules should be String, Regexp, Proc or Hash' 
           end
           result |= highlighted
         end
