@@ -37,15 +37,12 @@ module Widgets
        
         highlights.each do |highlight| # for every highlight(proc or hash)
           highlighted = true
-          if highlight.kind_of? String # do not highlight @TODO: should we evaluate the request URI for this?
-            highlighted &= false 
+          if highlight.kind_of? String # highlight if string matches URI
+            highlighted &= (request.uri == highlight)
+          elsif highlight.kind_of?(Regex) # highlight if expression matches URI
+            highlighted &= (request.uri =~ highlight)
           elsif highlight.kind_of? Proc # evaluate the proc
-            h = highlight.call
-            if (h.is_a?(TrueClass) || h.is_a?(FalseClass))
-              highlighted &= h
-            else
-              raise 'proc highlighting rules must evaluate to TrueClass or FalseClass'
-            end
+            highlighted &= (highlight.call ? true : false)
           elsif highlight.kind_of? Hash # evaluate the hash
             h = clean_unwanted_keys(highlight)
             h.each_key do |key|   # for each key
@@ -55,14 +52,14 @@ module Widgets
               highlighted &= h_key==options[key].to_s
             end
           else # highlighting rule not supported
-            raise 'highlighting rules should be String, Proc or Hash' 
+            raise 'highlighting rules should be String, Regex, Proc or Hash' 
           end
           result |= highlighted
         end
         return result
       end
       
-      private  
+      private
       
       # removes unwanted keys from a Hash 
       # and returns a new hash
