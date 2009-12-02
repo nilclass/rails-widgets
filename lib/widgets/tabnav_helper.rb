@@ -41,6 +41,7 @@ module Widgets
 
     # renders the tabnav
     def render_tabnav(name, opts={}, &proc)
+      self.instance_variable_set(:@tabnav_breadcrumbs,[]) if self.instance_variable_get(:@tabnav_breadcrumbs).nil?
       raise ArgumentError, "Missing name parameter in tabnav call" unless name
       raise ArgumentError, "Missing block in tabnav call" unless block_given?
       @_tabnav = Tabnav.new(name, opts)
